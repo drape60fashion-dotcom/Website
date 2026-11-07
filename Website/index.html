@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drape60 – Fashion in 60 minutes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--bg:#fff;--fg:#111;--mu:#6b6b6b;--ln:#e8e6df;--sf:#f6f4ee;--ac:#f5c518;--on:#111;--sh:0 8px 30px #0002;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0e0e;--fg:#f5f5f2;--mu:#a0a09a;--ln:#2a2a28;--sf:#1a1a18}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--fg);font-size:14px;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0}
+.w{max-width:1100px;margin:0 auto;padding:0 14px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--ln)}
+.hr{display:flex;align-items:center;gap:10px;padding:10px 0}
+.logo{font-weight:700;font-size:19px;letter-spacing:-.5px}.logo b{background:var(--ac);color:var(--on);padding:0 5px;border-radius:5px;margin-left:1px}
+.sb{flex:1;position:relative}.sb input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--ln);background:var(--sf);border-radius:10px;outline:0}
+.sb input:focus{border-color:var(--fg)}.sb svg{position:absolute;left:11px;top:11px}
+#sg{position:absolute;left:0;right:0;top:44px;background:var(--bg);border:1px solid var(--ln);border-radius:10px;box-shadow:var(--sh);overflow:hidden;display:none}
+#sg button{display:block;width:100%;text-align:left;padding:11px 14px;border-bottom:1px solid var(--ln)}#sg button:hover{background:var(--sf)}
+.ib{position:relative;padding:6px}.ib i{position:absolute;top:0;right:0;background:var(--ac);color:var(--on);font-style:normal;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:grid;place-items:center}
+.loc{display:flex;align-items:center;gap:6px;padding:0 0 9px;font-size:12px;color:var(--mu)}.loc b{color:var(--fg)}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.strip{background:var(--fg);color:var(--bg);text-align:center;padding:9px 12px;font-size:12.5px}.strip b{color:var(--ac)}
+.hero{margin:14px 0;background:var(--ac);color:#111;border-radius:16px;padding:22px 20px}.hero h1{font-size:26px;line-height:1.1;letter-spacing:-1px;max-width:300px}.hero p{margin-top:8px;font-size:13px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:7px 14px;border:1px solid var(--ln);border-radius:20px;font-size:13px}.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tb{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:6px 0 12px}.tb select{padding:7px 8px;border:1px solid var(--ln);border-radius:8px;background:var(--bg)}
+.btn{padding:12px 18px;border-radius:10px;font-weight:600;background:var(--fg);color:var(--bg);width:100%}.btn.y{background:var(--ac);color:var(--on)}.btn.o{background:none;border:1px solid var(--fg);color:var(--fg)}.btn.s{width:auto;padding:7px 12px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 10px}@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr);gap:20px 14px}}
+.card{position:relative;cursor:pointer}.card .im{aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:var(--sf)}.im svg{width:100%;height:100%;stroke:none}
+.card h3{font-size:13px;font-weight:500;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card small{color:var(--mu);font-size:11.5px}.card .pr{font-weight:600;margin-top:2px}
+.hb{position:absolute;top:8px;right:8px;background:var(--bg);border-radius:50%;width:32px;height:32px;display:grid;place-items:center}.hb.on svg{fill:var(--ac);stroke:var(--fg)}
+.sk{background:linear-gradient(90deg,var(--sf),var(--ln),var(--sf));background-size:200% 100%;animation:sh 1.2s infinite;border-radius:12px;aspect-ratio:4/5}@keyframes sh{to{background-position:-200% 0}}
+.panel{background:var(--sf);border-radius:12px;padding:14px;margin-bottom:12px}.panel h4{font-size:12px;color:var(--mu);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.5px}.panel h4:first-child{margin-top:0}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.pdp{position:fixed;inset:0;background:var(--bg);z-index:40;overflow-y:auto;padding-top:env(safe-area-inset-top,0px)}
+.pg{display:grid;gap:18px}@media(min-width:800px){.pg{grid-template-columns:1fr 1fr;align-items:start}}
+.car{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:14px;scrollbar-width:none}.car::-webkit-scrollbar{display:none}.car>div{flex:none;width:100%;scroll-snap-align:center;aspect-ratio:4/5;background:var(--sf)}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:8px}.dots i{width:6px;height:6px;border-radius:3px;background:var(--ln)}.dots i.on{background:var(--fg);width:16px}
+.sz{min-width:46px;padding:9px 12px;border:1px solid var(--ln);border-radius:8px;text-align:center}.sz.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--ln)}.dot.on{outline:2px solid var(--fg);outline-offset:2px}
+.est{border:1px solid var(--ln);border-radius:12px;padding:12px;margin:14px 0;display:grid;gap:6px;font-size:13px}.est div{display:flex;justify-content:space-between}
+table{width:100%;border-collapse:collapse;margin:8px 0}td{padding:9px 0;border-bottom:1px solid var(--ln)}td:first-child{color:var(--mu);width:38%}
+h2{font-size:17px;margin:22px 0 10px}
+.bar{position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:10px;border-top:1px solid var(--ln);margin-top:16px}
+.bi{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}.bi .im{width:78px;aspect-ratio:4/5;border-radius:8px;overflow:hidden;flex:none}
+.q{display:inline-flex;align-items:center;border:1px solid var(--ln);border-radius:8px}.q button{padding:3px 11px;font-size:16px}
+input.f,textarea.f,select.f{width:100%;padding:11px 12px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);margin:5px 0 10px;outline:0}input.f:focus,textarea.f:focus{border-color:var(--fg)}
+#modal{position:fixed;inset:0;background:#0007;z-index:60;display:none;align-items:flex-end;justify-content:center}#modal.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:440px;border-radius:18px 18px 0 0;padding:20px;max-height:90vh;overflow-y:auto}@media(min-width:600px){#modal{align-items:center}.sheet{border-radius:18px}}
+.sheet h3{font-size:19px;margin-bottom:4px}.mu{color:var(--mu);font-size:13px}
+.tot div{display:flex;justify-content:space-between;padding:5px 0}.tot .g{color:#2a8a3e;font-weight:600}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:11px 16px;border-radius:10px;z-index:90;font-size:13px;max-width:92%;text-align:center}
+.cp{border:1px dashed var(--fg);border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px}
+.empty{text-align:center;padding:60px 10px;color:var(--mu)}
+
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1)}}
+@keyframes bump{0%,100%{transform:scale(1)}50%{transform:scale(1.6)}}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes float{50%{transform:translateY(-7px)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes shine{to{background-position:200% 0}}
+.anim>.card{animation:up .45s both}.anim>.card:nth-child(2){animation-delay:.05s}.anim>.card:nth-child(3){animation-delay:.1s}.anim>.card:nth-child(4){animation-delay:.15s}.anim>.card:nth-child(5){animation-delay:.2s}.anim>.card:nth-child(6){animation-delay:.25s}.anim>.card:nth-child(n+7){animation-delay:.3s}
+.card .im{transition:transform .35s,box-shadow .35s}.card:hover .im{transform:translateY(-4px);box-shadow:var(--sh)}
+.btn{position:relative;overflow:hidden;transition:transform .12s,box-shadow .2s,opacity .2s}.btn:active{transform:scale(.97)}.btn.y:hover{box-shadow:0 8px 20px #f5c51877}
+.btn.ld{pointer-events:none;color:transparent!important}.btn.ld::after{content:"";position:absolute;inset:0;margin:auto;width:18px;height:18px;border:2.5px solid var(--bg);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+.btn.y.ld::after{border-color:var(--on);border-top-color:transparent}.btn.o.ld::after{border-color:var(--fg);border-top-color:transparent}
+.hb.pop svg{animation:pop .4s}#bb.bump{animation:bump .35s}.sheet{animation:sheetUp .3s}.toast{animation:up .25s}
+.hero{position:relative;overflow:hidden;background:linear-gradient(110deg,#f5c518 30%,#ffe27a 50%,#f5c518 70%);background-size:200% 100%;animation:shine 6s linear infinite}
+.hero::after{content:"60";position:absolute;right:-4px;bottom:-34px;font-size:130px;font-weight:800;letter-spacing:-8px;opacity:.13;animation:float 3s ease-in-out infinite}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px}.trust div{background:var(--sf);border-radius:12px;padding:11px 6px;font-size:12px;text-align:center;font-weight:600}
+#splash{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:200;transition:opacity .4s}
+.seg{display:flex;background:var(--sf);border-radius:12px;padding:4px;gap:4px}.seg button{flex:1;padding:10px 6px;border-radius:9px;font-weight:600;font-size:13px;transition:.2s}.seg button.on{background:var(--fg);color:var(--bg)}
+.map{position:relative;isolation:isolate;height:230px;border-radius:12px;margin:10px 0 6px;border:1px solid var(--ln)}
+.pin{background:none;border:0}.pin div{width:28px;height:28px;background:#f5c518;border:3px solid #111;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+.mres{position:absolute;left:0;right:0;top:100%;background:var(--bg);border:1px solid var(--ln);border-radius:10px;z-index:1000;box-shadow:var(--sh);overflow:hidden;margin-top:-6px}.mres:empty{display:none}
+.mres button{display:block;width:100%;text-align:left;padding:10px 12px;border-bottom:1px solid var(--ln);font-size:12.5px}
+.tick{width:76px;height:76px;stroke:#2a8a3e;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;margin-bottom:8px}.tick circle{stroke-dasharray:151;stroke-dashoffset:151;animation:draw .6s forwards}.tick path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .4s .5s forwards}
+.ft2{background:var(--fg);color:var(--bg);margin-top:40px;padding:34px 0 24px}.ft2 .logo{color:var(--bg);margin-bottom:8px}
+.fg3{display:grid;gap:22px;grid-template-columns:1fr 1fr}.fg3>div:first-child{grid-column:1/-1}@media(min-width:760px){.fg3{grid-template-columns:2fr 1fr 1fr 1fr}.fg3>div:first-child{grid-column:auto}}
+.ft2 h5{font-size:12px;text-transform:uppercase;letter-spacing:.7px;opacity:.6;margin-bottom:10px}.ft2 p,.ft2 span,.ft2 button{display:block;font-size:13px;opacity:.85;margin-bottom:8px;text-align:left;line-height:1.5}.ft2 button:hover{color:var(--ac);opacity:1}
+.cp2{border-top:1px solid #ffffff22;margin-top:20px;padding-top:16px;font-size:12px;opacity:.6}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.fl{display:flex;flex-direction:column;align-items:center;gap:14px;padding:34px 10px;text-align:center}
+.fl .rack{display:flex;gap:12px;align-items:flex-end;padding:14px 18px;border-radius:18px;background:var(--sf);max-width:100%;overflow:hidden}
+.fl svg.o{width:42px;height:56px;flex:none;fill:none;stroke:var(--fg);stroke-width:1.7;stroke-linejoin:round;opacity:.3;animation:fo 3.6s infinite}
+.fl svg.o:nth-child(2){animation-delay:.6s}.fl svg.o:nth-child(3){animation-delay:1.2s}.fl svg.o:nth-child(4){animation-delay:1.8s}.fl svg.o:nth-child(5){animation-delay:2.4s}.fl svg.o:nth-child(6){animation-delay:3s}
+@keyframes fo{0%,100%{opacity:.3;transform:none;fill:none}8%,22%{opacity:1;transform:translateY(-9px);fill:#f5c51866;stroke:#b98a00}32%{opacity:.3;transform:none}}
+.fl .bar{width:170px;height:4px;background:var(--ln);border-radius:2px;overflow:hidden}.fl .bar i{display:block;height:100%;width:40%;background:var(--ac);border-radius:2px;animation:slide 1.2s infinite}
+@keyframes slide{from{margin-left:-40%}to{margin-left:100%}}
+.fl .tp{position:relative;height:20px;width:270px;font-size:13px;color:var(--mu)}.fl .tp span{position:absolute;inset:0;opacity:0;animation:tp 8s infinite}.fl .tp span:nth-child(2){animation-delay:2s}.fl .tp span:nth-child(3){animation-delay:4s}.fl .tp span:nth-child(4){animation-delay:6s}
+@keyframes tp{0%{opacity:0;transform:translateY(6px)}5%,22%{opacity:1;transform:none}27%,100%{opacity:0}}
+.secs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:2px}.secs::-webkit-scrollbar{display:none}.secs button{flex:none;padding:10px 18px;border-radius:12px;background:var(--sf);font-weight:600;transition:.2s}.secs button.on{background:var(--fg);color:var(--bg)}
+.im{position:relative}.im img.alt{position:absolute;inset:0;opacity:0;transition:opacity .3s}.card:hover .im img.alt{opacity:1}
+.offb{position:absolute;left:8px;top:8px;background:#111;color:#f5c518;font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:6px}
+.offb2{background:#f5c518;color:#111;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:4px}
+.thumbs{display:flex;gap:8px;overflow-x:auto;margin-top:10px;scrollbar-width:none}.thumbs button{flex:none;width:58px;height:72px;border-radius:8px;overflow:hidden;border:1px solid var(--ln)}.thumbs img{width:100%;height:100%;object-fit:cover}
+#lb{position:fixed;inset:0;background:#000d;z-index:90;display:none;place-items:center}#lb.on{display:grid}#lb img{max-width:96vw;max-height:92vh;border-radius:10px}
+.sz.out{opacity:.35;text-decoration:line-through}.btn[disabled]{opacity:.45;pointer-events:none}
+
+.prof{display:flex;flex-direction:column;align-items:center;padding:6px 0 20px;position:relative;text-align:center}
+.bkc,.bkb{width:44px;height:44px;border-radius:50%;background:var(--sf);display:grid;place-items:center;flex:none}.bkc{position:absolute;left:0;top:4px}
+.av{width:104px;height:104px;border-radius:50%;background:var(--ac);color:#111;font-size:42px;font-weight:700;display:grid;place-items:center;margin:30px 0 14px;box-shadow:0 0 0 6px var(--sf)}
+.pn{font-size:22px;margin:0 0 2px}
+.mcard{border:1px solid var(--ln);background:var(--sf);border-radius:20px;padding:0 18px;margin-bottom:18px}
+.mrow{display:flex;align-items:center;gap:16px;width:100%;padding:18px 2px;border-bottom:1px solid var(--ln);text-align:left;font-size:16px;transition:opacity .15s}.mrow:active{opacity:.6}.mrow:last-child{border:0}.mrow span{flex:1}.mrow svg{width:23px;height:23px}.mrow svg.chev{width:16px;height:16px;opacity:.4}
+.ver{text-align:center;color:var(--mu);font-size:13px;margin:6px 0 24px}
+.sh{display:flex;align-items:center;gap:12px;padding:10px 0 6px}.sh h2{margin:0}
+.card2{border:1px solid var(--ln);border-radius:16px;padding:14px;margin:10px 0;background:var(--bg)}
+details.fq{border-bottom:1px solid var(--ln);padding:14px 2px}details.fq summary{font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px}details.fq summary::after{content:"+";font-size:20px;line-height:1}details.fq[open] summary::after{content:"−"}details.fq p{color:var(--mu);margin-top:8px;line-height:1.6}
+.doc h4{margin:18px 0 6px}.doc p{color:var(--mu);line-height:1.65}
+
+.sz{min-width:46px;height:46px;border-radius:23px;padding:0 14px;display:inline-grid;place-items:center;font-size:14px;transition:.15s}.sz.on{animation:pop .3s}
+.lnk{color:#1a5fd0;font-size:13px;text-decoration:underline}
+.tabs2{display:flex;background:var(--sf);border:1px solid var(--ln);border-bottom:0;border-radius:16px 16px 0 0;padding:6px 6px 0;gap:4px;margin-top:18px}.tabs2 button{flex:1;padding:14px;border-radius:12px 12px 0 0;font-weight:700;color:var(--mu)}.tabs2 button.on{background:var(--bg);color:var(--fg)}
+.tbody{border:1px solid var(--ln);border-radius:0 0 16px 16px;background:var(--bg)}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:20px 14px;padding:20px 16px}.sg small{display:block;color:var(--mu);font-size:12px;margin-bottom:4px}.sg b{font-size:14px;display:block}
+.vm{width:100%;padding:16px;border-top:1px solid var(--ln);font-weight:700;font-size:16px}
+.pbar{display:flex;gap:10px;position:sticky;bottom:0;padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg);margin-top:16px;z-index:5}.pbar .btn{flex:1;border-radius:12px;padding:16px;font-size:15px}
+details.fd{border-bottom:1px solid var(--ln);padding:14px 0}details.fd summary{font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between}details.fd summary::after{content:"+";font-size:20px;line-height:1}details.fd[open] summary::after{content:"−"}
+.ck{display:flex;align-items:center;gap:12px;padding:11px 0}.ck input{width:20px;height:20px;accent-color:#111}.ck span{flex:1}.ck small{color:var(--mu)}
+.szt{width:100%;border-collapse:collapse}.szt th,.szt td{padding:10px 6px;border-bottom:1px solid var(--ln);text-align:center;font-size:13px}.szt th{background:var(--sf)}
+#pill{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);transform:translateX(-50%);width:min(94vw,560px);z-index:35;display:none;align-items:center;gap:12px;background:var(--fg);color:var(--bg);border-radius:16px;padding:10px 14px 16px;box-shadow:0 10px 30px #0004;text-align:left}
+#pill.on{display:flex;animation:pillIn .45s}@keyframes pillIn{from{transform:translate(-50%,140%)}to{transform:translate(-50%,0)}}
+#pill .mu{color:inherit;opacity:.75}#pill>svg{width:18px;height:18px;opacity:.7;flex:none}
+.pi2{width:48px;height:48px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex:none;overflow:hidden}.pi2 svg{width:44px;height:36px}
+.pg2{position:absolute;left:14px;right:14px;bottom:6px;height:3px;background:#ffffff33;border-radius:2px;overflow:hidden}.pg2 i{display:block;height:100%;background:var(--ac);transition:width .6s}
+body.hp #app{padding-bottom:90px}
+#trk{position:fixed;inset:0;background:var(--bg);z-index:50;overflow-y:auto;display:none;padding-top:env(safe-area-inset-top,0px)}#trk.on{display:block;animation:up .3s}
+.scene{background:var(--sf);border-radius:20px;margin:14px 0;padding:10px}.scene svg{width:100%;max-height:200px;display:block}.tt{text-align:center;margin:6px 0 4px}
+.sc *{fill:none;stroke:var(--fg);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.sc .fy{fill:#f5c518;stroke:#111}
+.sc .pl{stroke:#f5c518;transform-origin:center;transform-box:fill-box;animation:ring 1.6s infinite}@keyframes ring{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.4);opacity:0}}
+.sc .tk{stroke:#2a8a3e;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .6s .2s forwards}.sc .tk2{stroke:#111;stroke-dasharray:50;stroke-dashoffset:50;animation:draw .6s .2s forwards}
+.sc .drop{animation:drp 1.5s infinite ease-in}@keyframes drp{0%{transform:translateY(0);opacity:1}70%{transform:translateY(34px);opacity:1}100%{transform:translateY(34px);opacity:0}}
+.sc .rid{animation:ride 3s linear infinite}@keyframes ride{from{transform:translateX(-34px)}to{transform:translateX(72px)}}
+.sc .road{stroke-dasharray:10 8;animation:road .5s linear infinite}@keyframes road{to{stroke-dashoffset:-18}}
+.sc .wheel{stroke-dasharray:6 4;transform-box:fill-box;transform-origin:center;animation:spin .6s linear infinite}
+.sc .bounce{animation:bnc 1s ease-in-out infinite}@keyframes bnc{50%{transform:translateY(-7px)}}
+.sc .conf circle{fill:#f5c518;stroke:none;transform-box:fill-box;transform-origin:center;animation:cf 1.4s infinite}.sc .conf circle:nth-child(2){animation-delay:.3s}.sc .conf circle:nth-child(3){animation-delay:.6s}.sc .conf circle:nth-child(4){animation-delay:.9s}@keyframes cf{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(0) translateY(-10px)}}
+.stp2{margin:18px 0 8px}.st{display:flex;gap:14px;position:relative;padding-bottom:22px}.st i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ln);background:var(--bg);flex:none;margin-top:3px;z-index:1}
+.st::before{content:"";position:absolute;left:6px;top:18px;bottom:-2px;width:2px;background:var(--ln)}.st:last-child::before{display:none}.st.dn i{background:var(--fg);border-color:var(--fg)}.st.dn::before{background:var(--fg)}
+.st.cu i{background:var(--ac);border-color:var(--fg);animation:pls 1.4s infinite}@keyframes pls{0%{box-shadow:0 0 0 0 #f5c51899}100%{box-shadow:0 0 0 10px #f5c51800}}.st b{font-size:14px}.st:not(.dn):not(.cu) b{color:var(--mu);font-weight:500}
+</style></head><body>
+<header><div class="strip" id="strip"></div><div class="w"><div class="hr">
+<div class="logo" data-a="home">Drape<b>60</b></div>
+<div class="sb"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" placeholder="Search jeans, kurta, dress…" autocomplete="off"><div id="sg"></div></div>
+<button class="ib" data-a="wish" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/></svg><i id="bw"></i></button>
+<button class="ib" data-a="bag" aria-label="Bag"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0"/></svg><i id="bb"></i></button>
+<button class="ib" data-a="acct" aria-label="Account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+</div><button class="loc" data-a="area"><svg viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2"/></svg><span id="lc"></span></button></div></header>
+<main class="w" id="app"></main><footer class="ft2"><div class="w"><div class="fg3"><div><div class="logo">Drape<b>60</b></div><p>Festive and everyday fashion from Hyderabad’s favourite stores, delivered to your door in 60 minutes or ready for pickup.</p></div>
+<div><h5>Shop</h5><button data-a="fcat" data-k="g" data-v="Women">Women</button><button data-a="fcat" data-k="g" data-v="Men">Men</button><button data-a="fcat" data-k="c" data-v="Sarees">Sarees</button><button data-a="fcat" data-k="c" data-v="Lehenga">Lehenga</button><button data-a="fcat" data-k="c" data-v="Kurtis">Kurtis</button></div>
+<div><h5>Partner stores</h5><span>Youvthi</span><span>Tarangg</span><span>Kisah</span><span>Issa Studio</span></div>
+<div><h5>Delivery</h5><span>Hyderabad only for now</span><span>60-minute delivery</span><span>Free store pickup</span></div></div><div class="cp2">© 2026 Drape60 · Made in Hyderabad</div></div></footer><div id="pdp" class="pdp" hidden></div><div id="modal"></div><div id="lb"></div><button id="pill" data-a="trkp" aria-label="Track order"></button><div id="trk"></div><div id="splash"></div>
+<script>
+const $=s=>document.querySelector(s),fm=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const API_URL='https://script.google.com/macros/s/AKfycbw4LnEmSac8VSTOkLUHKIfqgan7rFEpzMi5KUZvFnGwrElf4ax-C4vb7HNOXI99Gs8/exec';/* paste your Apps Script web app URL here */
+const api=(a,d,t)=>API_URL?fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({a,d,t})}).then(r=>r.json()).catch(()=>({err:'Network error'})):Promise.resolve({err:'offline'});
+const OUT=['M20 4h10l2 12-4 6 8 8-6 30H18L14 30l8-8-4-6z','M20 4h10l3 12H17zM17 16l-4 44h24l-4-44','M18 6l7-3 7 3 12 12-5 6-5-4v32H16V20l-5 4-5-6z','M16 6l9 4 9-4 12 10-6 8-4-3v31H14V21l-4 3-6-8z','M14 4h22l4 56H29l-4-36-4 36H10z','M20 4h10l2 16 14 40H4l14-40z'];
+const FL=()=>`<div class="fl"><div class="logo" style="font-size:26px">Drape<b>60</b></div><div class="rack">${OUT.map(d=>`<svg class="o" viewBox="0 0 50 64"><path d="${d}"/></svg>`).join('')}</div><div class="bar"><i></i></div><div class="tp"><span>Draping the finest sarees…</span><span>Pressing fresh kurtas…</span><span>Picking festive lehengas…</span><span>Matching tees and denim…</span></div></div>`;
+$('#splash').innerHTML=FL();
+const AREAS={Kukatpally:[17.4948,78.3996],Madhapur:[17.4486,78.3908],Manikonda:[17.4,78.38],Gachibowli:[17.4401,78.3489],Miyapur:[17.4967,78.3563],'Hitech City':[17.4435,78.3772],Kondapur:[17.46,78.364],'Banjara Hills':[17.4156,78.4347],'Jubilee Hills':[17.4326,78.4071],Ameerpet:[17.4375,78.4483],Begumpet:[17.444,78.4676],Secunderabad:[17.4399,78.4983],Nizampet:[17.5153,78.3856],Bachupally:[17.544,78.358],Attapur:[17.377,78.429],Mehdipatnam:[17.395,78.44],Uppal:[17.4058,78.5591],Dilsukhnagar:[17.3688,78.5247],Charminar:[17.3616,78.4747],Kokapet:[17.4,78.33]};
+let HUB={Youvthi:'Madhapur',Tarangg:'Kukatpally',Kisah:'Manikonda','Issa Studio':'Gachibowli'};
+const COL={Indigo:'#2f4375',Black:'#1a1a1a',Grey:'#8a8a8a','Light Blue':'#a9c4e0',Blue:'#4a74b5',Ecru:'#e9e0cb',White:'#fafafa','Sky Blue':'#9ccbea',Beige:'#d9c7a3',Olive:'#6b6b34',Yellow:'#f5c518',Mustard:'#d9a521',Maroon:'#6e1f2b',Cream:'#f1e8d2',Navy:'#1c2745',Teal:'#1f6e6e',Emerald:'#1b6b4a',Pink:'#e8a5b8',Ivory:'#f4efdf',Rust:'#a8481f',Champagne:'#e5cfa6',Wine:'#5a1a2e',Sand:'#cdb792',Red:'#b3202a',Gold:'#c9a227'};
+let P=[
+['Slim Stretch Jeans','M','Jeans',1799,'Indigo,Black','Youvthi','Mid-rise slim jeans in soft stretch denim for all-day comfort.'],
+['Straight Fit Jeans','M','Jeans',1999,'Blue,Grey','Issa Studio','Classic straight leg jeans with a clean, washed finish.'],
+['High-Rise Mom Jeans','W','Jeans',1899,'Light Blue,Black','Youvthi','Relaxed high-rise jeans with a tapered leg and cropped hem.'],
+['Wide Leg Jeans','W','Jeans',2199,'Indigo,Ecru','Kisah','Floor-skimming wide leg denim with a structured waistband.'],
+['Oxford Cotton Shirt','M','Shirts',1499,'White,Sky Blue','Tarangg','Breathable oxford cotton shirt, button-down collar, regular fit.'],
+['Linen Blend Shirt','M','Shirts',1699,'Beige,Olive','Kisah','Lightweight linen blend shirt with a relaxed, easy drape.'],
+['Oversized Graphic Tee','M','T-Shirts',999,'Black,White','Youvthi','Heavy cotton oversized tee with a back graphic print.'],
+['Boxy Crop Tee','W','T-Shirts',799,'White,Yellow','Issa Studio','Soft cotton boxy cropped tee with a ribbed neckline.'],
+['Silk Blend Kurta','M','Kurtas',2499,'Mustard,Maroon','Tarangg','Festive silk blend kurta with a mandarin collar and subtle sheen.'],
+['Festive Nehru Jacket Set','M','Ethnic',3999,'Cream,Navy','Tarangg','Kurta and Nehru jacket set, ideal for Diwali and weddings.'],
+['Straight Cotton Kurta','W','Kurtas',1799,'Mustard,Teal','Tarangg','Everyday straight kurta in pure cotton with hand block print.'],
+['Anarkali Festive Set','W','Ethnic',3499,'Maroon,Emerald','Kisah','Flared anarkali with dupatta, finished with zari border.'],
+['Chanderi Kurta Set','W','Ethnic',2999,'Pink,Ivory','Tarangg','Chanderi kurta, pants and dupatta set with delicate embroidery.'],
+['Floral Midi Dress','W','Dresses',2299,'Black,Rust','Issa Studio','Flowy floral midi dress with a flattering fit-and-flare cut.'],
+['Satin Slip Dress','W','Dresses',2599,'Champagne,Black','Issa Studio','Bias-cut satin slip dress with adjustable straps for evenings out.'],
+['Wrap Maxi Dress','W','Dresses',2799,'Olive,Wine','Kisah','Full-length wrap dress with a tie waist and gentle drape.'],
+['Cargo Joggers','M','Trousers',1599,'Olive,Black','Youvthi','Utility cargo joggers with elastic cuffs and zip pockets.'],
+['Pleated Trousers','W','Trousers',1899,'Beige,Black','Issa Studio','High-waist pleated trousers, tailored for work or brunch.'],
+['Cotton Palazzo Co-ord','W','Co-ords',2199,'Yellow,White','Kisah','Printed cotton top and palazzo co-ord set, light and festive.'],
+['Knit Polo','M','T-Shirts',1299,'Navy,Cream','Youvthi','Fine-knit polo with a soft collar and slim fit.'],
+['Printed Short Kurta','M','Kurtas',1599,'Indigo,Mustard','Tarangg','Casual short kurta with a block print, perfect with jeans.'],
+['Denim Jacket','M','Jackets',2999,'Blue,Black','Youvthi','Classic trucker denim jacket with a slightly boxy fit.'],
+['Cropped Blazer','W','Jackets',3299,'Black,Sand','Issa Studio','Structured cropped blazer with a single-button front.'],
+['Everyday Hoodie','U','Hoodies',1999,'Grey,Black','Youvthi','Brushed fleece hoodie with a roomy fit, unisex sizing.'],
+['Kanjivaram Silk Saree','W','Sarees',6999,'Maroon,Emerald','Kisah','Pure silk saree with a rich zari border and contrast pallu.'],
+['Banarasi Georgette Saree','W','Sarees',4599,'Pink,Navy','Tarangg','Lightweight Banarasi georgette saree with woven motifs.'],
+['Cotton Handloom Saree','W','Sarees',1999,'Mustard,Teal','Tarangg','Breathable handloom cotton saree for everyday festive wear.'],
+['Bridal Lehenga Choli','W','Lehenga',8999,'Red,Pink','Kisah','Embroidered lehenga choli with dupatta, made for weddings.'],
+['Festive Printed Lehenga','W','Lehenga',4499,'Mustard,Teal','Issa Studio','Flared printed lehenga with a matching blouse and dupatta.'],
+['Chikankari Kurti','W','Kurtis',1499,'White,Pink','Tarangg','Hand-embroidered chikankari kurti in soft cotton.'],
+['Printed A-line Kurti','W','Kurtis',1099,'Navy,Rust','Kisah','Easy A-line kurti with a vibrant block print.'],
+['Salwar Suit Set','W','Salwar Suits',2799,'Emerald,Maroon','Tarangg','Three-piece salwar suit set with dupatta.'],
+['Silk Blouse','W','Blouses',1299,'Gold,Maroon','Kisah','Ready-to-wear silk blouse with a back tie-up.']
+].map((a,i)=>({id:i,n:a[0],g:a[1],c:a[2],p:a[3],col:a[4].split(','),st:a[5],d:a[6],sec:{M:'Men',W:'Women',U:'Unisex'}[a[1]]}));
+const pf=id=>P.find(p=>p.id==id)||P[0],td=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const sp=p=>p.off&&p.off.from<=td()&&(!p.off.to||p.off.to>=td())?Math.round(p.p*(1-p.off.pct/100)):p.p;
+const pr=p=>sp(p)<p.p?`<s class="mu" style="font-weight:400">${fm(p.p)}</s> ${fm(sp(p))} <span class="offb2">${+p.off.pct}% off</span>`:fm(p.p);
+const SH={top:'M30 25L42 20Q50 28 58 20L70 25L88 45L76 55L70 48V105H30V48L24 55L12 45Z',bot:'M32 20H68L74 108H55L50 55L45 108H26Z',dr:'M40 18H60L62 45L80 108H20L38 45Z',kur:'M32 20L42 16Q50 24 58 16L68 20L84 40L74 48L68 42V112H32V42L26 48L16 40Z',saree:'M36 16H56L62 34L78 50L70 112H34L30 50L42 34Z',lehenga:'M40 16H60L62 38H38ZM38 38H62L84 112H16Z',shoe:'M14 70L40 66L52 54L66 66L90 70V86H14Z',bag:'M26 46H74L80 104H20Z'};
+const shp=(c,sec)=>{c=(c||'').toLowerCase();return sec=='Footwear'?SH.shoe:sec=='Accessories'?SH.bag:/saree|sari|dupatta/.test(c)?SH.saree:/lehenga|gown|anarkali/.test(c)?SH.lehenga:/jean|denim|trouser|pant|palazzo|skirt|jogger/.test(c)?SH.bot:/kurti|kurta|blouse|suit/.test(c)?SH.kur:/dress|ethnic|co-ord|set/.test(c)?SH.dr:SH.top};
+const COLH=(p,c)=>(p.hex&&p.hex[c])||COL[c]||'#999';
+const imgsFor=(p,col)=>{if(!p.imgs||!p.imgs.length)return[];const ic=p.imgc||[],m=p.imgs.filter((u,i)=>!ic[i]||ic[i]==col);return m.length?m:p.imgs};
+const art=(p,k=0,col)=>{const c0=col||p.col[0],L=imgsFor(p,c0);if(L.length)return `<img src="${L[k%L.length]}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover">`;
+const c=COLH(p,c0),z=k==1?'0 20 100 100':k==2?'-10 0 120 130':'0 0 100 125';
+return `<svg viewBox="${z}" preserveAspectRatio="xMidYMid slice"><rect x="-20" y="-20" width="160" height="170" fill="${k==2?'#f5c518':'#efece3'}" opacity="${k==2?.35:1}"/><path d="${shp(p.c,p.sec)}" fill="${c}" stroke="#0002" stroke-width="1"/>${k==1?'<path d="M40 60h20M40 70h20" stroke="#fff6" stroke-width="2"/>':''}</svg>`};
+const sizes=p=>p.cols?[...new Set(Object.values(p.cols).flatMap(c=>Object.keys(c).filter(s=>c[s]>0)))]:/saree|dupatta/i.test(p.c)?['Free size']:p.c=='Jeans'?(p.g=='W'?['26','28','30','32']:['28','30','32','34','36']):['XS','S','M','L','XL'];
+const sizeList=p=>p.cols?[...new Set(Object.values(p.cols).flatMap(c=>Object.keys(c)))]:sizes(p);
+const qty=(p,c,z)=>p.cols&&p.cols[c]&&p.cols[c][z]!=null?+p.cols[c][z]:99;
+let S={bag:[],wish:[],area:null,gps:null,addr:'',coupon:null,user:null,orders:[],view:'home',sort:'foryou',f:{g:'',c:'',s:'',max:20000,z:'',b:[],sale:0},q:'',fp:0,seen:0};
+try{Object.assign(S,JSON.parse(localStorage.getItem('d60')||'{}'))}catch(e){}
+if(S.f&&(S.f.g=='M'||S.f.g=='W'))S.f.g='';if(S.f&&S.f.max<=5000)S.f.max=20000;
+const save=()=>{try{localStorage.setItem('d60',JSON.stringify(S))}catch(e){}};
+const track=(act)=>{if(!API_URL||!S.user)return;api('activity',{who:S.user.id,role:'customer',action:act,detail:S.area||''},S.tok)};
+const syncCust=()=>{if(!API_URL||!S.tok)return;api('cust.save',{name:S.user.name,dob:S.user.dob,taste:S.user.taste,area:S.area,addr:S.addr,lat:S.gps&&S.gps[0],lng:S.gps&&S.gps[1]},S.tok)};
+const T0=Date.now();addEventListener('pagehide',()=>{if(API_URL&&S.user)navigator.sendBeacon(API_URL,JSON.stringify({a:'activity',d:{who:S.user.id,role:'customer',action:'session',mins:Math.round((Date.now()-T0)/60000)},t:S.tok}))});
+function placeRows(o){if(!API_URL||!S.tok)return;api('order.place',{rows:S.bag.map(b=>{const p=pf(b.id);return{id:o.id+'-'+p.id,orderId:o.id,store:p.st,pid:p.id,name:p.n,color:b.col,size:b.size,qty:b.qty,amt:sp(p)*b.qty,coupon:S.coupon||'',custName:S.user.name,phone:/^\d+$/.test(S.user.id)?S.user.id:'',area:S.mode=='pickup'?'Store pickup':S.area,pin:S.pin||'',flat:(S.ad||{}).flat||'',landmark:(S.ad||{}).landmark||'',city:(S.ad||{}).city||'Hyderabad',state:(S.ad||{}).state||'Telangana',mode:S.mode=='pickup'?'pickup':'delivery',pickupCode:o.code||'',addr:S.mode=='pickup'?'Customer will collect from store':S.addr,lat:S.gps&&S.gps[0],lng:S.gps&&S.gps[1],placed:new Date().toISOString()}})},S.tok);track('order')}
+let CP=[{code:'DIWALI15',t:'pct',v:15,cap:500,min:1499,ok:1,d:'15% off up to ₹500 on orders above ₹1,499'},{code:'FIRST100',t:'flat',v:100,min:999,ok:1,d:'₹100 off on orders above ₹999'},{code:'FREEDEL',t:'ship',v:0,min:0,ok:1,d:'Free delivery on any order'}];
+try{const c=JSON.parse(localStorage.getItem('d60_coupons'));if(c)CP=c}catch(e){}
+let OFFER='Diwali edit · Code <b>DIWALI15</b> · Free delivery above ₹999';try{OFFER=localStorage.getItem('d60_offer')||OFFER}catch(e){}
+let T={load:0,pid:null,pc:0,sz:'',col:'',m:null};
+const I=n=>({heart:'<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/></svg>',x:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',back:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>'}[n]);
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),3200)}
+/* ---------- search ---------- */
+const GW=['men','man','women','woman'];
+const txt=p=>(p.n+' '+p.c+' '+(p.sec||'')+' '+p.col.join(' ')+' '+p.st+' '+p.d).toLowerCase();
+function match(p,q){for(const t of q.toLowerCase().split(/\s+/).filter(Boolean)){if(t=='men'||t=='man'){if(p.g=='W'||p.g=='K')return 0}else if(t=='women'||t=='woman'){if(p.g=='M'||p.g=='K')return 0}else if(!txt(p).includes(t))return 0}return 1}
+const VOC=[...new Set(P.flatMap(p=>txt(p).split(/[^a-z]+/)).filter(w=>w.length>2))];
+function suggest(q){q=q.toLowerCase().trimStart();if(!q)return[];const ts=q.split(/\s+/),last=ts.pop(),pre=ts.join(' ')+(ts.length?' ':'');const out=[];
+VOC.filter(w=>w.startsWith(last)).sort((a,b)=>a.length-b.length).slice(0,4).forEach(w=>{[pre+w,pre+w+' women',pre+w+' men'].forEach(s=>{if(!out.includes(s)&&P.some(p=>match(p,s)))out.push(s)})});return out.slice(0,8)}
+/* ---------- delivery ---------- */
+const here=()=>S.gps||AREAS[S.area]||AREAS.Madhapur;
+function km(a,b){const r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]),h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 12742*Math.asin(Math.sqrt(h))*1.35}
+function est(p){const d=km(AREAS[HUB[p.st]]||AREAS.Madhapur,here());return{d,bike:Math.round(12+d/24*60),bus:Math.round(14+d/14*60+6)}}
+function totals(){const sub=S.bag.reduce((s,b)=>s+sp(pf(b.id))*b.qty,0);const c=CP.find(x=>x.code==S.coupon&&x.ok);let disc=0,ship=sub&&sub<999&&S.mode!='pickup'?49:0;
+if(c&&sub>=c.min){if(c.t=='pct')disc=Math.min(sub*c.v/100,c.cap);if(c.t=='flat')disc=c.v;if(c.t=='ship')ship=0}return{sub,disc,ship,tot:Math.max(0,sub-disc+ship)}}
+/* ---------- list ---------- */
+const secOf=p=>p.sec||'Unisex',inSec=(p,g)=>!g||secOf(p)==g||(secOf(p)=='Unisex'&&(g=='Men'||g=='Women'));
+function list(){let l=P.filter(p=>(!S.q||match(p,S.q))&&inSec(p,S.f.g)&&(!S.f.c||p.c==S.f.c)&&(!S.f.s||p.st==S.f.s)&&sp(p)<=S.f.max&&(!S.f.z||sizes(p).includes(S.f.z))&&(!(S.f.b||[]).length||S.f.b.includes(p.brand||p.st))&&(!S.f.sale||sp(p)<p.p));
+const tt=(S.user&&S.user.taste)||[];const sc=p=>tt.some(t=>p.c.toLowerCase().includes(t.toLowerCase().slice(0,4)))?1:0;
+if(S.sort=='lo')l.sort((a,b)=>sp(a)-sp(b));else if(S.sort=='hi')l.sort((a,b)=>sp(b)-sp(a));else if(S.sort=='foryou')l.sort((a,b)=>sc(b)-sc(a));return l}
+const card=p=>{const L=imgsFor(p,p.col[0]);return `<div class="card" data-a="open" data-id="${p.id}"><div class="im">${art(p,0)}${L.length>1?art(p,1).replace('<img','<img class="alt"'):''}${sp(p)<p.p?`<span class="offb">${+p.off.pct}% OFF</span>`:''}</div><button class="hb ${S.wish.includes(p.id)?'on':''}${T.pop==p.id?' pop':''}" data-a="wl" data-id="${p.id}" aria-label="Wishlist">${I('heart')}</button><h3>${p.n}</h3><small>${p.st}</small><div class="pr">${pr(p)}</div></div>`};
+const FILT=()=>{const f=S.f,ch=(k,v,l)=>`<button class="chip ${f[k]==v?'on':''}" data-a="f" data-k="${k}" data-v="${v}">${l||v}</button>`,zs=[...new Set(P.flatMap(sizes))].slice(0,14);
+return `<div class="panel"><h4>Store</h4><div class="row">${ch('s','','All')}${[...new Set(P.map(p=>p.st))].map(x=>ch('s',x)).join('')}</div><h4>Size</h4><div class="row">${ch('z','','Any')}${zs.map(x=>ch('z',x)).join('')}</div><h4>Max price: ${f.max>=20000?'Any':fm(f.max)}</h4><input type="range" min="500" max="20000" step="500" value="${f.max}" id="mx" style="width:100%;accent-color:#f5c518"><button class="btn s o" data-a="reset" style="margin-top:10px">Clear all</button></div>`};
+function mFilter(){const f=S.f,bs={};P.forEach(p=>{const b=p.brand||p.st;bs[b]=(bs[b]||0)+1});const zs=[...new Set(P.flatMap(sizes))];
+modal(`<div class="row" style="justify-content:space-between"><h3>Filters</h3><button data-a="mc">${I('x')}</button></div>
+<details class="fd" open><summary>Brand</summary>${Object.keys(bs).sort().map(b=>`<label class="ck"><input type="checkbox" data-b="${esc(b)}" ${(f.b||[]).includes(b)?'checked':''}><span>${esc(b)}</span><small>${bs[b]}</small></label>`).join('')}</details>
+<details class="fd"><summary>Size</summary><div class="row" style="margin-top:10px">${zs.map(z=>`<button class="sz ${f.z==z?'on':''}" style="border:1px solid var(--ln)" data-a="fz" data-v="${esc(z)}">${esc(z)}</button>`).join('')}</div></details>
+<details class="fd"><summary>Price</summary><p class="mu" id="mxl" style="margin:10px 0 4px">${f.max>=20000?'Any price':'Up to '+fm(f.max)}</p><input type="range" min="500" max="20000" step="500" value="${f.max}" id="mx" style="width:100%;accent-color:#f5c518"></details>
+<details class="fd"><summary>Offers</summary><label class="ck"><input type="checkbox" id="fsale" ${f.sale?'checked':''}><span>Only items on sale</span></label></details>
+<div class="row" style="flex-wrap:nowrap;margin-top:16px"><button class="btn o" data-a="reset">Clear all</button><button class="btn" data-a="fapply">Show results</button></div>`)}
+function home(){const secs=['Women','Men','Kids','Footwear','Accessories'].filter(x=>P.some(p=>inSec(p,x))),l=list(),cats=['',...new Set(P.filter(p=>inSec(p,S.f.g)).map(p=>p.c))],nf=(S.f.b||[]).length+(S.f.z?1:0)+(S.f.max<20000?1:0)+(S.f.sale?1:0);
+$('#app').innerHTML=`<div class="hero"><h1>Festive fits at your door in 60 minutes.</h1><p>From Youvthi, Tarangg, Kisah and Issa Studio, delivered across Hyderabad or ready for pickup.</p></div><div class="trust"><div>60-min delivery</div><div>Curated stores</div><div>Free store pickup</div></div>
+<div class="secs">${['',...secs].map(x=>`<button class="${S.f.g==x?'on':''}" data-a="f" data-k="g" data-v="${x}">${x||'All'}</button>`).join('')}</div>
+<div class="chips" style="margin-top:10px">${cats.map(c=>`<button class="chip ${S.f.c==c?'on':''}" data-a="f" data-k="c" data-v="${c}">${c||'All styles'}</button>`).join('')}</div>
+<div class="tb"><span class="mu">${S.q?`“${S.q}” · `:''}${l.length} styles</span><div class="row"><button class="chip ${nf?'on':''}" data-a="fp">Filters${nf?` (${nf})`:''}</button><select id="so" aria-label="Sort"><option value="foryou">For you</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select></div></div>
+${T.load?`${FL()}<div class="grid">${'<div class="sk"></div>'.repeat(4)}</div>`:l.length?`<div class="grid${T.anim?' anim':''}">${l.map(card).join('')}</div>`:'<div class="empty">No styles match. Try clearing filters.</div>'}<div style="height:20px"></div>`;
+$('#so').value=S.sort}
+function go(v){S.view=v;T.m=null;closePdp();T.anim=1;render();T.anim=0;scrollTo(0,0)}
+function load(){T.load=1;render();setTimeout(()=>{T.load=0;T.anim=1;render();T.anim=0},650)}
+/* ---------- pdp ---------- */
+const SAMPLE_SPEC={Jeans:[['Material','Stretch denim'],['Fit','Regular'],['Waist type','Mid waist'],['Occasion','Casual, everyday'],['Season','All year']],Shirts:[['Material','Cotton'],['Fit','Regular'],['Pattern','Solid'],['Occasion','Work, casual']],'T-Shirts':[['Material','Cotton'],['Fit','Relaxed'],['Pattern','Printed'],['Season','All year']],Sarees:[['Fabric','Silk blend'],['Blouse piece','Included'],['Occasion','Festive, wedding'],['Wash care','Dry clean']],Lehenga:[['Fabric','Silk and net'],['Pieces included','Lehenga, choli, dupatta'],['Occasion','Wedding, festive']],Kurtis:[['Material','Cotton'],['Fit','Straight'],['Sleeve','Three-quarter'],['Occasion','Everyday, festive']],Kurtas:[['Material','Cotton blend'],['Fit','Straight'],['Occasion','Festive, everyday']],Dresses:[['Material','Georgette'],['Fit','Fit and flare'],['Occasion','Party, brunch']]};
+const pSpecs=p=>[['Gender',secOf(p)],['Color',T.col],['Category',p.c],['Brand',p.brand||p.st],['Size',T.sz||'Select a size']].concat((Array.isArray(p.spec)&&p.spec.length?p.spec:SAMPLE_SPEC[p.c]||[]).filter(r=>r&&r[0]&&r[1]));
+const inc=v=>v+'″ ('+Math.round(v*2.54)+' cm)';
+function chart(p){const c=(p.c||'').toLowerCase(),sec=secOf(p),sz=sizeList(p);
+if(sec=='Footwear')return{t:'Footwear',h:['UK / India','EU','Foot length (cm)'],r:[['5','38','23.5'],['6','39','24.5'],['7','40','25.4'],['8','42','26.2'],['9','43','27.1'],['10','44','28']]};
+if(sec=='Kids')return{t:'Kids',h:['Age','Height (cm)'],r:[['2-3Y','92–98'],['4-5Y','104–110'],['6-7Y','116–122'],['8-9Y','128–134'],['10-12Y','140–152']]};
+if(/saree|sari|dupatta/.test(c))return{t:'Free size',h:['Item','Typical size'],r:[['Saree','5.5 m, plus 0.8 m blouse piece'],['Dupatta','2.5 m']]};
+const W=sec=='Women';
+if(/jean|denim|trouser|pant|jogger|chino|palazzo|skirt/.test(c)){const ns=sz.filter(x=>/^\d+$/.test(x));return{t:W?'Women’s bottoms':'Men’s bottoms',h:['Size','Waist','Hip'],r:(ns.length?ns:(W?['26','28','30','32','34']:['28','30','32','34','36'])).map(x=>[x,inc(+x),inc(+x+(W?9:8))])}}
+const C0=W?{XS:[32,26,35],S:[34,28,37],M:[36,30,39],L:[38,32,41],XL:[40,34,43]}:{XS:[34,28,35],S:[36,30,37],M:[38,32,39],L:[40,34,41],XL:[42,36,43]},ks=sz.filter(x=>C0[x]).length?sz.filter(x=>C0[x]):Object.keys(C0);
+return{t:W?'Women’s tops, kurtis and dresses':'Men’s tops and shirts',h:['Size',W?'Bust':'Chest','Waist','Hip'],r:ks.map(x=>[x,inc(C0[x][0]),inc(C0[x][1]),inc(C0[x][2])])}}
+function mSize(){const p=pf(T.pid),c=chart(p);modal(`<div class="row" style="justify-content:space-between"><h3>Size chart</h3><button data-a="mc">${I('x')}</button></div><p class="mu" style="margin:4px 0 12px">${c.t}. Body measurements in inches (cm). Fit can vary by brand.</p><div style="overflow-x:auto"><table class="szt"><tr>${c.h.map(x=>`<th>${x}</th>`).join('')}</tr>${c.r.map(r=>`<tr>${r.map((x,i)=>`<td${i?'':' style="font-weight:700"'}>${x}</td>`).join('')}</tr>`).join('')}</table></div>${p.sizeNote?`<p style="margin-top:12px"><b>Store note:</b> ${p.sizeNote}</p>`:''}`)}
+function openP(id){T.pid=id;const p=pf(id);T.sz='';T.col=p.col[0];T.tab='s';T.specAll=0;drawP();$('#pdp').hidden=false;$('#pdp').scrollTop=0;document.body.style.overflow='hidden'}
+function closePdp(){$('#pdp').hidden=true;document.body.style.overflow=''}
+const inBag=()=>S.bag.some(b=>b.id==T.pid&&b.size==T.sz&&b.col==T.col);
+function addToBag(){const p=pf(T.pid);if(!T.sz){toast('Please select a size');return 0}const k=S.bag.find(b=>b.id==T.pid&&b.size==T.sz&&b.col==T.col),have=k?k.qty:0,av=qty(p,T.col,T.sz);
+if(have+1>av){toast(av<=0?'This size is sold out':'Only '+av+' left in this size');return 0}k?k.qty++:S.bag.push({id:T.pid,size:T.sz,col:T.col,qty:1});return 1}
+function drawP(){const p=pf(T.pid),e=est(p),L=imgsFor(p,T.col),rel=P.filter(x=>x.id!=p.id&&(x.c==p.c||secOf(x)==secOf(p))).slice(0,4),lowq=T.sz?qty(p,T.col,T.sz):99,all=pSpecs(p),shown=T.specAll?all:all.slice(0,9),ib=inBag(),fee=sp(p)>=999?'Free delivery':'₹49 (free above ₹999)';
+$('#pdp').innerHTML=`<div class="w"><div class="hr"><button class="ib" data-a="close" aria-label="Back">${I('back')}</button><div class="logo" style="flex:1">Drape<b>60</b></div><button class="hb ${S.wish.includes(p.id)?'on':''}" style="position:static;border:1px solid var(--ln)" data-a="wl" data-id="${p.id}">${I('heart')}</button></div>
+<div class="pg"><div><div class="car" id="car">${(L.length?L.map(u=>`<div><img src="${u}" alt="" data-a="zoom" data-u="${u}" loading="lazy" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in"></div>`):[0,1,2].map(k=>`<div>${art(p,k,T.col)}</div>`)).join('')}</div>
+<div class="dots" id="dots">${(L.length?L:[0,1,2]).map((x,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>${L.length>1?`<div class="thumbs">${L.map((u,i)=>`<button data-a="goimg" data-i="${i}"><img src="${u}" alt=""></button>`).join('')}</div>`:''}</div>
+<div><small class="mu" style="text-transform:uppercase;letter-spacing:.6px">${p.brand||p.st}</small><h1 style="font-size:22px;margin:2px 0">${p.n}</h1><div style="font-size:20px;font-weight:700">${pr(p)} <small class="mu" style="font-weight:400">incl. taxes</small></div>
+<h4 class="mu" style="margin:16px 0 8px">Colour: ${T.col}</h4><div class="row">${p.col.map(c=>`<button class="dot ${c==T.col?'on':''}" style="background:${COLH(p,c)}" data-a="col" data-v="${c}" aria-label="${c}" title="${c}"></button>`).join('')}</div>
+<div class="row" style="justify-content:space-between;margin:20px 0 10px"><b>SIZE: <span class="mu" style="font-weight:500">${T.sz||'Select'}</span></b><button class="lnk" data-a="szchart">Size Chart</button></div>
+<div class="row">${sizeList(p).map(z=>{const q=qty(p,T.col,z);return `<button class="sz ${z==T.sz?'on':''}${q<=0?' out':''}" style="border:1px solid var(--ln)" data-a="sz" data-v="${z}" ${q<=0?'disabled':''}>${z}</button>`}).join('')}</div>
+${lowq<=5?`<p style="color:#c0392b;font-size:12.5px;margin-top:8px">Only ${lowq} left in this size</p>`:''}
+<p class="mu" style="margin-top:14px">Did not find your size? <button class="lnk" data-a="similar">View Similar</button></p>
+<div class="est"><div><b>Delivery in about ${e.bike} min</b><span>${S.pin?'to '+S.area+' · '+S.pin:'Add your address for an exact time'}</span></div><div><span>Delivery fee</span><b style="color:#2a8a3e">${fee}</b></div></div>
+<div class="tabs2"><button class="${T.tab=='d'?'':'on'}" data-a="ptab" data-v="s">Specifications</button><button class="${T.tab=='d'?'on':''}" data-a="ptab" data-v="d">Description</button></div>
+<div class="tbody">${T.tab=='d'?`<p class="mu" style="padding:18px;line-height:1.7">${p.d}</p>`:`<div class="sg">${shown.map(r=>`<div><small>${r[0]}</small><b>${r[1]}</b></div>`).join('')}</div>${all.length>9?`<button class="vm" data-a="specall">View ${T.specAll?'Less ˄':'More ˅'}</button>`:''}`}</div></div></div>
+<h2>You may also like</h2><div class="grid">${rel.map(card).join('')}</div><div style="height:20px"></div>
+<div class="pbar"><button class="btn o" data-a="buy">Buy Now</button><button class="btn" data-a="add">${ib?'Go to Bag':'Add to Bag'}</button></div></div>`;
+const c=$('#car');c.onscroll=()=>{const i=Math.round(c.scrollLeft/c.clientWidth);[...$('#dots').children].forEach((d,k)=>d.className=k==i?'on':'')}}
+/* ---------- bag / wish / account ---------- */
+function modeBlock(){const pk=S.mode=='pickup',seg=`<h2>How would you like it?</h2><div class="seg"><button class="${pk?'':'on'}" data-a="mode" data-v="delivery">Delivery · 60 min</button><button class="${pk?'on':''}" data-a="mode" data-v="pickup">I’ll collect in store</button></div>`;
+if(!pk)return seg+`<div class="panel" style="margin-top:12px"><b>${S.ad?S.ad.tag+' · '+S.area:'Select delivery address'}</b><div class="mu" style="margin:4px 0 10px">${S.addr||'No address added'}</div><button class="btn s o" data-a="area">${S.addr?'Edit address':'Add address'}</button></div>`;
+const ss=[...new Set(S.bag.map(b=>pf(b.id).st))];return seg+ss.map(n=>`<div class="panel" style="margin-top:12px"><b>${n}</b><div class="mu" style="margin:4px 0 10px">${HUB[n]||'Hyderabad'}, Hyderabad · ready in about 15 minutes</div><a class="btn s o" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(n+' '+(HUB[n]||'')+' Hyderabad')}">Get directions</a></div>`).join('')+'<p class="mu" style="margin-top:8px">You’ll get a pickup code after you order. Show it at the store counter.</p>'}
+function bag(){const t=totals(),av=CP.filter(c=>c.ok);
+$('#app').innerHTML=`<h2>Your bag (${S.bag.length})</h2>`+(S.bag.length?`${S.bag.map((b,i)=>{const p=pf(b.id);return `<div class="bi"><div class="im">${art(p,0,b.col)}</div><div style="flex:1"><b>${p.n}</b><div class="mu">${p.st} · ${b.col} · Size ${b.size}</div><div style="margin:8px 0;font-weight:600">${pr(p)}</div><span class="q"><button data-a="qm" data-i="${i}">−</button>${b.qty}<button data-a="qp" data-i="${i}">+</button></span> <button class="mu" data-a="rm" data-i="${i}" style="margin-left:10px">Remove</button></div></div>`}).join('')}
+<h2>Offers</h2><div class="row"><input class="f" id="cc" placeholder="Enter coupon code" style="flex:1;margin:0"><button class="btn s y" data-a="apply">Apply</button></div>${av.map(c=>`<div class="cp"><div><b>${c.code}</b><div class="mu">${c.d}</div></div><button class="btn s o" data-a="use" data-v="${c.code}">${S.coupon==c.code?'Applied':'Use'}</button></div>`).join('')}
+${modeBlock()}
+<h2>Price details</h2><div class="tot"><div><span>Subtotal</span><span>${fm(t.sub)}</span></div><div class="g"><span>Coupon discount</span><span>−${fm(t.disc)}</span></div><div><span>${S.mode=='pickup'?'Store pickup':'Delivery'}</span><span>${t.ship?fm(t.ship):'Free'}</span></div><div style="font-weight:700;font-size:16px;border-top:1px solid var(--ln);margin-top:6px;padding-top:10px"><span>Total</span><span>${fm(t.tot)}</span></div></div>
+<div class="bar"><button class="btn y" data-a="pay">Pay ${fm(t.tot)}</button></div>`:'<div class="empty">Your bag is empty.<br><br><button class="btn s y" data-a="home">Start shopping</button></div>')}
+function wish(){const l=S.wish.map(i=>pf(i));$('#app').innerHTML=`<h2>Wishlist</h2>${l.length?`<div class="grid">${l.map(card).join('')}</div>`:'<div class="empty">Tap the heart on any style to save it here.</div>'}`}
+const TASTE=['Streetwear','Ethnic','Formal','Minimal','Party','Casual','Denim','Festive'];
+const ic=d=>`<svg viewBox="0 0 24 24"><path d="${d}"/></svg>`,
+IC={bag:'M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0',pin:'M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',tag:'M4 4h8l8 8-8 8-8-8zM9 9h.01',heart:'M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z',mega:'M4 10v4h3l8 4V6L7 10zM18 9a4 4 0 0 1 0 6',head:'M4 14v-2a8 8 0 0 1 16 0v2M4 14h3v4H4zM17 14h3v4h-3zM17 18c0 2-2 3-5 3',book:'M3 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H3zM21 5h-7a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h7z',doc:'M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6',clip:'M9 4h6v3H9zM7 5H5v16h14V5h-2M9 12h6M9 16h6',out:'M10 4H5v16h5M15 8l4 4-4 4M19 12H9',chev:'M9 6l6 6-6 6'};
+const SUPPORT={phone:'',whatsapp:'',email:''},VER='v1.0.0';
+const SHD=t=>`<div class="sh"><button class="bkb" data-a="acct" aria-label="Back">${I('back')}</button><h2>${t}</h2></div>`;
+const addrLine=a=>[a.flat,a.addr2,a.landmark?'Near '+a.landmark:'',a.area,a.city,a.state].filter(Boolean).join(', ')+' - '+a.pin;
+const row=(i,l,a,v)=>`<button class="mrow" data-a="${a}"${v?` data-v="${v}"`:''}>${ic(IC[i])}<span>${l}</span>${ic(IC.chev).replace('<svg','<svg class="chev"')}</button>`;
+function acct(){const u=S.user;
+if(!u){$('#app').innerHTML=`<div class="sh"><button class="bkb" data-a="home" aria-label="Back">${I('back')}</button></div><div class="empty">Log in to see your orders, addresses and offers.<br><br><button class="btn s y" data-a="login">Log in / Sign up</button></div>`;return}
+const ph=/^\d{10}$/.test(u.id)?'+91 '+u.id:u.id,ini=String(u.name||u.id||'D').trim()[0].toUpperCase();
+$('#app').innerHTML=`<div class="prof"><button class="bkc" data-a="home" aria-label="Back">${I('back')}</button><div class="av">${esc(ini)}</div><h2 class="pn">${esc(u.name||'Your name')}</h2><p class="mu" style="margin-bottom:14px">${esc(ph)}</p><button class="btn o s" data-a="editprof" style="padding:10px 26px;border-radius:24px">Edit profile</button></div>
+<div class="mcard">${row('bag','All orders','go','orders')}${row('pin','Saved addresses','go','addrs')}${row('tag','All offers','go','offers')}${row('heart','Wishlist','wish')}${row('mega','Refer & earn','go','refer')}${row('head','Contact us','go','contact')}</div>
+<div class="mcard">${row('book','FAQs','go','faq')}${row('doc','Terms & conditions','go','terms')}${row('clip','Our policies','go','policy')}${row('out','Logout','lgo')}</div><p class="ver">${VER}</p>`}
+function mProf(){const u=S.user;modal(`<div class="row" style="justify-content:space-between"><h3>Edit profile</h3><button data-a="mc">${I('x')}</button></div><br><label class="mu">Full name</label><input class="f" id="pn1"><label class="mu">Date of birth (optional)</label><input class="f" id="pd1" type="date"><label class="mu">Your style</label><div class="row" id="tt" style="margin:6px 0 16px">${TASTE.map(t=>`<button class="chip ${(u.taste||[]).includes(t)?'on':''}" data-a="tt" data-v="${t}">${t}</button>`).join('')}</div><button class="btn y" data-a="saveprof">Save</button>`);$('#pn1').value=u.name||'';$('#pd1').value=u.dob||''}
+const STAT={new:'Order placed',accepted:'Accepted',packing:'Packing',packed:'Packing',dispatched:'Dispatched',picked:'On the way',done:'Delivered',rejected:'Cancelled by store'};
+const ORD_S=['new','accepted','packing','dispatched','picked','done'],stIdx=x=>x=='packed'?2:Math.max(0,ORD_S.indexOf(x));
+const TXT=pk=>({new:['Order placed','We have sent your order to the store.'],accepted:['Store accepted your order','The store is getting your items ready.'],packing:['Packing your order','Your items are being checked and packed.'],dispatched:pk?['Ready for pickup','Show your pickup code at the store counter.']:['Dispatched','Packed and handed over. A rider is being arranged.'],picked:['Rider is on the way','Your order is on its way to you.'],done:[pk?'Collected':'Delivered','Enjoy your new style!']});
+const SC=[
+`<svg class="sc" viewBox="0 0 120 90"><circle class="pl" cx="60" cy="45" r="30"/><path d="M42 36h36l-4 34H46zM50 36a10 10 0 0 1 20 0"/><path class="tk" d="M52 54l6 6 11-13"/></svg>`,
+`<svg class="sc" viewBox="0 0 120 90"><path d="M26 38l6-16h56l6 16zM30 38v36h60V38M52 74V54h16v20"/><circle class="pl" cx="92" cy="22" r="13"/><path class="tk" d="M85 22l5 5 9-10"/></svg>`,
+`<svg class="sc" viewBox="0 0 120 90"><g class="drop"><rect class="fy" x="52" y="4" width="16" height="14" rx="3"/></g><path d="M32 44l28-12 28 12v26L60 82 32 70z"/><path d="M32 44l28 12 28-12M60 56v26"/></svg>`,
+`<svg class="sc" viewBox="0 0 120 90"><circle class="pl" cx="60" cy="46" r="34"/><g class="bounce"><path d="M40 38l20-10 20 10v22L60 70 40 60z"/><path d="M40 38l20 10 20-10M60 48v22"/></g></svg>`,
+`<svg class="sc" viewBox="0 0 120 90"><path class="road" d="M0 80H120"/><g class="rid"><circle class="wheel" cx="18" cy="70" r="6"/><circle class="wheel" cx="50" cy="70" r="6"/><path d="M18 70h14l8-20M44 50h-6M32 70l6-14h8l4 14"/><rect class="fy" x="12" y="36" width="18" height="14" rx="2"/><circle cx="44" cy="40" r="5"/></g></svg>`,
+`<svg class="sc" viewBox="0 0 120 90"><circle class="fy" cx="60" cy="45" r="28"/><path class="tk2" d="M47 46l9 9 18-20"/><g class="conf"><circle cx="20" cy="20" r="3"/><circle cx="100" cy="26" r="3"/><circle cx="28" cy="72" r="3"/><circle cx="94" cy="68" r="3"/></g></svg>`];
+function trkGroups(){let rows=T.ord;if(!API_URL||!S.tok)rows=(S.orders||[]).map(o=>({orderId:o.id,status:ORD_S[Math.min(5,Math.floor((Date.now()-(o.ts||0))/9000))],mode:o.mode,pickupCode:o.code,name:o.n+' item(s)',color:'',size:'',qty:'',amt:o.t,placed:new Date(o.ts||Date.now()).toISOString(),history:[]}));
+const g={};(rows||[]).forEach(r=>{const k=r.orderId||r.id;(g[k]=g[k]||[]).push(r)});
+return Object.keys(g).map(k=>{const it=g[k],act=it.filter(x=>x.status!='rejected'),idx=act.length?Math.min(...act.map(x=>stIdx(x.status))):-1;return{id:k,items:it,idx,rej:!act.length,pk:it[0].mode=='pickup',rider:it.find(x=>x.riderName),code:it[0].pickupCode,t:String(it[0].placed||'')}}).sort((a,b)=>b.t.localeCompare(a.t))}
+function updPill(){const p=$('#pill');if(!p)return;const g=S.user?trkGroups().find(x=>x.idx>=0&&x.idx<5&&!x.rej):null;
+if(!g){p.className='';document.body.classList.remove('hp');return}
+const tx=TXT(g.pk)[ORD_S[g.idx]];p.innerHTML=`<div class="pi2">${SC[g.idx]}</div><div style="flex:1;min-width:0"><b>Order #${esc(g.id)}</b><div class="mu" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${tx[0]}</div></div>${ic(IC.chev)}<span class="pg2"><i style="width:${(g.idx+1)/6*100}%"></i></span>`;
+p.className='on';document.body.classList.add('hp')}
+function openTrk(id){T.tid=id;drawTrk();$('#trk').className='on';document.body.style.overflow='hidden'}
+function closeTrk(){$('#trk').className='';document.body.style.overflow=''}
+function drawTrk(){const g=trkGroups().find(x=>String(x.id)==String(T.tid));if(!g){closeTrk();return}
+const tx=TXT(g.pk),steps=ORD_S.filter(x=>!g.pk||x!='picked'),cur=g.rej?-1:steps.indexOf(ORD_S[g.idx]),h=Array.isArray(g.items[0].history)?g.items[0].history:[],tm=x=>{const e=h.find(y=>y.s==x);return e?new Date(e.t).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):''},r=g.rider;
+$('#trk').innerHTML=`<div class="w"><div class="sh"><button class="bkb" data-a="trkx" aria-label="Back">${I('back')}</button><h2>Order #${esc(g.id)}</h2></div>
+${g.rej?`<div class="card2" style="border-color:#c0392b;color:#c0392b;margin-top:14px"><b>Cancelled by the store</b><p class="mu" style="margin-top:4px">The store could not accept this order.</p></div>`:`<div class="scene">${SC[g.idx]}</div><h2 class="tt">${tx[ORD_S[g.idx]][0]}</h2><p class="mu" style="text-align:center">${tx[ORD_S[g.idx]][1]}</p>`}
+${g.pk&&g.code&&!g.rej?`<div class="card2" style="text-align:center"><p class="mu">Pickup code</p><h2 style="letter-spacing:4px;font-size:30px;margin:4px 0">${esc(g.code)}</h2></div>`:''}
+${r&&g.idx>=3&&!g.pk&&!g.rej?`<div class="card2 row" style="justify-content:space-between;flex-wrap:nowrap"><div><b>${esc(r.riderName)}</b><div class="mu">${esc(r.vehicle||'Your rider')}</div></div><div class="row" style="flex-wrap:nowrap">${r.riderPhone?`<a class="btn s o" style="text-decoration:none" href="tel:${esc(r.riderPhone)}">Call</a>`:''}${/^https?:\/\//i.test(r.riderLink||'')?`<a class="btn s y" style="text-decoration:none" target="_blank" rel="noopener" href="${esc(r.riderLink)}">Track live</a>`:''}</div></div>`:''}
+<div class="stp2">${steps.map((x,i)=>`<div class="st ${i<cur?'dn':i==cur?'cu':''}"><i></i><div><b>${tx[x][0]}</b><div class="mu">${tm(x)}</div></div></div>`).join('')}</div>
+<h4 style="margin:6px 0">Items</h4>${g.items.map(x=>`<p class="mu" style="margin:4px 0">${esc(x.name)}${x.size?' · '+esc(x.color)+' · '+esc(x.size)+' × '+esc(x.qty):''}${x.status=='rejected'?' · cancelled':''}</p>`).join('')}<div style="height:40px"></div></div>`}
+function loadOrders(){if(!API_URL||!S.tok)return;api('order.mine',{},S.tok).then(r=>{if(!r.orders)return;const prev=T.last||{};
+r.orders.forEach(o=>{if(prev[o.id]&&prev[o.id]!=o.status){const pk=o.mode=='pickup';toast(o.status=='rejected'?'A store cancelled part of your order':TXT(pk)[ORD_S.includes(o.status)?o.status:'packing'][0]);try{navigator.vibrate&&navigator.vibrate(120)}catch(e){}}});
+T.last={};r.orders.forEach(o=>T.last[o.id]=o.status);T.ord=r.orders;updPill();if(S.view=='orders')render();if($('#trk').className=='on')drawTrk()})}
+function startTrk(){clearInterval(T.tv);if(!API_URL||!S.tok)return;loadOrders();T.tv=setInterval(()=>{if(!document.hidden)loadOrders()},10000)}
+setInterval(()=>{if((!API_URL||!S.tok)&&S.user){updPill();if($('#trk').className=='on')drawTrk()}},3000);
+
+function vOrders(){let L=[];if(T.ord&&T.ord.length){const g={};T.ord.forEach(o=>{const k=o.orderId||o.id;(g[k]=g[k]||[]).push(o)});L=Object.keys(g).reverse().map(k=>({id:k,items:g[k]}))}
+$('#app').innerHTML=SHD('All orders')+(L.length?L.map(o=>{const f=o.items[0],tot=o.items.reduce((a,x)=>a+(+x.amt||0),0);return `<div class="card2"><div class="row" style="justify-content:space-between"><b>#${esc(o.id)}</b><span class="offb2">${STAT[f.status]||esc(f.status)}</span></div>${o.items.map(x=>`<p class="mu" style="margin:6px 0">${esc(x.name)} · ${esc(x.color)} · ${esc(x.size)} × ${esc(x.qty)}</p>`).join('')}<div class="row" style="justify-content:space-between;margin-top:6px"><b>${fm(tot)}</b><span class="mu">${f.mode=='pickup'?'Store pickup'+(f.pickupCode?' · code '+esc(f.pickupCode):''):'Delivery'}</span></div>${['done','rejected'].includes(f.status)?'':`<button class="btn s y" data-a="trk" data-v="${esc(o.id)}" style="margin-top:10px">Track order</button>`}</div>`}).join(''):S.orders.length?S.orders.map(o=>`<div class="card2"><b>#${o.id}</b> · ${fm(o.t)}<div class="mu" style="margin-top:4px">${o.n} item(s) · ${o.at} · ${esc(o.area)}</div></div>`).join(''):'<div class="empty">No orders yet.</div>')}
+function vAddrs(){if(!(S.addrs||[]).length&&S.ad&&S.ad.pin)S.addrs=[Object.assign({id:'a0',gps:S.gps},S.ad)];const L=S.addrs||[],cur=S.ad&&S.ad.id;
+$('#app').innerHTML=SHD('Saved addresses')+(L.length?L.map(a=>`<div class="card2"><b>${esc(a.tag||'Home')}</b>${a.id==cur?' <span class="offb2">Delivering here</span>':''}<p class="mu" style="margin:6px 0 12px;line-height:1.5">${esc(addrLine(a))}</p><div class="row">${a.id==cur?'':`<button class="btn s y" data-a="useaddr" data-v="${a.id}">Deliver here</button>`}<button class="btn s o" data-a="editaddr" data-v="${a.id}">Edit</button><button class="btn s o" data-a="deladdr" data-v="${a.id}">Delete</button></div></div>`).join(''):'<div class="empty">No saved addresses yet.</div>')+`<button class="btn y" data-a="newaddr" style="margin-top:8px">Add new address</button>`}
+function vOffers(){const cs=CP.filter(c=>c.ok);$('#app').innerHTML=SHD('All offers')+`<div class="card2" style="background:var(--ac);color:#111;border:0">${OFFER}</div>`+(cs.length?cs.map(c=>`<div class="cp"><div><b>${esc(c.code)}</b><div class="mu">${esc(c.d)}</div></div><button class="btn s o" data-a="cpy" data-v="${esc(c.code)}">Copy</button></div>`).join(''):'<div class="empty">No coupons right now.</div>')+'<p class="mu" style="margin-top:14px">Apply a coupon in your bag at checkout.</p>'}
+const rcode=()=>'D60'+[...String(S.user&&S.user.id||'x')].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7).toString(36).toUpperCase().slice(0,5);
+function vRefer(){$('#app').innerHTML=SHD('Refer & earn')+`<div class="card2" style="text-align:center;padding:26px 14px"><p class="mu">Your referral code</p><h2 style="font-size:30px;letter-spacing:2px;margin:8px 0 16px">${rcode()}</h2><button class="btn y" data-a="share">Share with friends</button></div><p class="mu" style="line-height:1.6">Invite friends to shop festive fashion in 60 minutes. Referral rewards are coming soon.</p>`}
+function vContact(){const b=[];if(SUPPORT.phone)b.push(`<a class="btn o" style="text-decoration:none;display:block;text-align:center;margin-top:10px" href="tel:${esc(SUPPORT.phone)}">Call us</a>`);if(SUPPORT.whatsapp)b.push(`<a class="btn o" style="text-decoration:none;display:block;text-align:center;margin-top:10px" target="_blank" rel="noopener" href="https://wa.me/${esc(SUPPORT.whatsapp)}">Chat on WhatsApp</a>`);if(SUPPORT.email)b.push(`<a class="btn o" style="text-decoration:none;display:block;text-align:center;margin-top:10px" href="mailto:${esc(SUPPORT.email)}">Email us</a>`);
+$('#app').innerHTML=SHD('Contact us')+(b.length?`<p class="mu">Have an order question? Keep your order number ready.</p>${b.join('')}`:'<div class="empty">Support contact details will be added here soon.</div>')}
+const FQ=[['How fast is delivery?','We aim to deliver within 60 minutes from partner stores near you in Hyderabad. The expected time is shown on every product.'],['Which areas do you deliver to?','Only Hyderabad for now. Your pincode must start with 500.'],['Can I collect my order from the store?','Yes. Choose “I’ll collect in store” in your bag. You will get a pickup code to show at the counter.'],['How do I change my delivery address?','Open Account, then Saved addresses. You can add, edit or choose a different address.'],['What about returns and exchanges?','Each partner store sets its own return and exchange policy. Contact us with your order number and we will help.'],['Why is a size or colour not available?','Stores update their stock live. If a size shows as struck through, it is sold out right now.']];
+function vFaq(){$('#app').innerHTML=SHD('FAQs')+FQ.map(q=>`<details class="fq"><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('')}
+function vTerms(){$('#app').innerHTML=SHD('Terms & conditions')+`<div class="doc"><h4>Using Drape60</h4><p>Drape60 connects you with partner fashion stores in Hyderabad. Products, prices and stock are provided by the stores you buy from.</p><h4>Orders and delivery</h4><p>We deliver only within Hyderabad. Delivery times are estimates and may change with traffic and store workload. For store pickup, bring the pickup code shown after you order.</p><h4>Prices and offers</h4><p>Prices include taxes. Discounts and coupons are valid for the dates and conditions shown and may be withdrawn by the store or Drape60.</p><h4>Your account</h4><p>Keep your login details safe. Please give an accurate name, phone number and address so that your order can reach you.</p></div>`}
+function vPolicy(){$('#app').innerHTML=SHD('Our policies')+`<div class="doc"><h4>Returns and exchanges</h4><p>Each partner store has its own return and exchange policy. Contact us with your order number if you need help.</p><h4>Privacy</h4><p>We collect your name, phone or email, delivery address and location so we can deliver your order, and we record how you use the app to improve it. We do not sell your personal data.</p><h4>Delivery coverage</h4><p>We currently deliver only in Hyderabad. Orders outside this area cannot be placed.</p><h4>Seller verification</h4><p>Every partner store is checked by our team before its products are shown to customers.</p></div>`}
+
+function render(){$('#strip').innerHTML=OFFER;$('#lc').innerHTML=S.mode=='pickup'?'<b>Store pickup</b> ▾':S.area?`Deliver to <b>${S.area}${S.pin?' · '+S.pin:''}</b> ▾`:'<b>Add delivery address</b> ▾';
+$('#bb').textContent=S.bag.length||'';$('#bb').style.display=S.bag.length?'grid':'none';$('#bw').textContent=S.wish.length||'';$('#bw').style.display=S.wish.length?'grid':'none';
+({home,bag,wish,acct,orders:vOrders,addrs:vAddrs,offers:vOffers,refer:vRefer,contact:vContact,faq:vFaq,terms:vTerms,policy:vPolicy})[S.view]();save();updPill()}
+/* ---------- modals ---------- */
+function modal(h){const m=$('#modal');if(!h){m.className='';m.innerHTML='';return}m.innerHTML=`<div class="sheet">${h}</div>`;m.className='on'}
+const ex=s=>String(s||'').replace(/[&<>"']/g,''),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),ld=(b,on)=>{if(b)b.classList.toggle('ld',!!on)};
+const bump=()=>{const b=$('#bb');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')};
+const inHyd=(la,ln)=>la>=17.2&&la<=17.7&&ln>=78.15&&ln<=78.7,okPin=p=>/^500\d{3}$/.test(p);
+let MAP=null,MK=null,ST;
+function chk(){const pin=$('#a4').value.trim(),g=S.gps,ok=g?inHyd(g[0],g[1]):true,bad=pin.length==6&&!okPin(pin);
+$('#mst').innerHTML=!ok||bad?'<span style="color:#c0392b">We deliver only in Hyderabad right now.</span>':g?'<span style="color:#2a8a3e">We deliver to this spot ✓</span>':'Tap the map, search, or use GPS to drop your pin.';return ok&&!bad}
+async function pinLook(p){if(!/^\d{6}$/.test(p)){chk();return}
+let city='',state='';try{const r=await fetch('https://api.postalpincode.in/pincode/'+p).then(r=>r.json()),o=r[0]&&r[0].PostOffice&&r[0].PostOffice[0];if(o){city=/Hyderabad|Ranga|Medchal/i.test(o.District)?'Hyderabad':o.District;state=o.State;if(!$('#a3').value)$('#a3').value=o.Name}}catch(e){}
+if(!city&&okPin(p)){city='Hyderabad';state='Telangana'}$('#a6').value=city;$('#a7').value=state;chk()}
+async function rev(la,ln){$('#mst').textContent='Finding your address…';try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language=en&lat=${la}&lon=${ln}`).then(r=>r.json()),a=r.address||{};
+$('#a3').value=a.suburb||a.neighbourhood||a.quarter||a.city_district||a.village||$('#a3').value;const pc=String(a.postcode||'').replace(/\D/g,'').slice(0,6);if(pc)$('#a4').value=pc;if(a.road&&!$('#a2').value)$('#a2').value=a.road;pinLook($('#a4').value.trim())}catch(e){toast('Could not fetch the address. Please type it.');chk()}}
+function setPin(la,ln,fly){S.gps=[la,ln];if(MK){MK.setLatLng([la,ln]);if(fly)MAP.setView([la,ln],17)}rev(la,ln)}
+function initMap(){const m=$('#mp');if(MAP){try{MAP.remove()}catch(e){}MAP=null}
+if(!window.L){m.innerHTML='<p class="mu" style="padding:16px">The map could not load. Use GPS or type your address.</p>';return}
+const c=S.gps||[17.44,78.4];MAP=L.map('mp').setView(c,S.gps?17:12);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(MAP);
+MK=L.marker(c,{draggable:true,icon:L.divIcon({className:'pin',html:'<div></div>',iconSize:[30,30],iconAnchor:[15,30]})}).addTo(MAP);
+MK.on('dragend',()=>{const p=MK.getLatLng();setPin(p.lat,p.lng)});MAP.on('click',e=>setPin(e.latlng.lat,e.latlng.lng));setTimeout(()=>MAP.invalidateSize(),300)}
+function mArea(ent,nw){const d=ent||(nw?{}:(S.ad||{}));T.tag=d.tag||'Home';T.editId=ent?ent.id:null;if(ent){T.gpsBak=S.gps;S.gps=ent.gps||null}else if(nw){T.gpsBak=S.gps;S.gps=null}
+modal(`<div class="row" style="justify-content:space-between"><h3>Delivery address</h3><button data-a="mc">${I('x')}</button></div><p class="mu">We deliver only in Hyderabad right now. Search, tap the map, or use GPS, then fill in the details.</p>
+<button class="btn o" data-a="gps" style="margin-top:12px">Use my current location</button>
+<div style="position:relative"><input class="f" id="ms" placeholder="Search area, street or landmark" autocomplete="off" style="margin-top:10px"><div id="mr" class="mres"></div></div>
+<div id="mp" class="map"></div><p class="mu" id="mst" style="margin-bottom:10px"></p>
+<input class="f" id="a1" placeholder="House / flat no. *"><input class="f" id="a2" placeholder="Building, street, address *"><input class="f" id="a5" placeholder="Landmark * (e.g. near metro station)">
+<div class="row" style="flex-wrap:nowrap"><input class="f" id="a4" placeholder="Pincode *" inputmode="numeric" maxlength="6" style="width:118px"><input class="f" id="a3" placeholder="Area / locality *" style="flex:1"></div>
+<div class="row" style="flex-wrap:nowrap"><input class="f" id="a6" placeholder="City (auto)" readonly style="flex:1;background:var(--sf)"><input class="f" id="a7" placeholder="State (auto)" readonly style="flex:1;background:var(--sf)"></div>
+<div class="seg" id="tg" style="margin:2px 0 14px">${['Home','Work','Other'].map(x=>`<button data-a="tag" data-v="${x}" class="${T.tag==x?'on':''}">${x}</button>`).join('')}</div>
+<button class="btn y" data-a="saveaddr">Save address</button>`);
+$('#a1').value=d.flat||'';$('#a2').value=d.addr2||d.street||'';$('#a5').value=d.landmark||'';$('#a3').value=d.area||'';$('#a4').value=d.pin||'';$('#a6').value=d.city||'';$('#a7').value=d.state||'';
+$('#ms').oninput=e=>{clearTimeout(ST);const q=e.target.value.trim();if(q.length<3){$('#mr').innerHTML='';return}
+ST=setTimeout(async()=>{try{const r=await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&countrycodes=in&bounded=1&viewbox=78.15,17.7,78.7,17.2&accept-language=en&q=${encodeURIComponent(q+' Hyderabad')}`).then(r=>r.json());T.sr=r;$('#mr').innerHTML=r.map((x,i)=>`<button data-a="sr" data-i="${i}">${ex(x.display_name)}</button>`).join('')}catch(e){}},500)};
+$('#a4').oninput=e=>{const v=e.target.value.replace(/\D/g,'');e.target.value=v;if(v.length==6)pinLook(v);else{$('#a6').value='';$('#a7').value='';chk()}};initMap();chk()}
+function mLogin(step,id,otp){T.m={step,id,otp};
+if(step==1)modal(`<div class="row" style="justify-content:space-between"><h3>Log in or sign up</h3><button data-a="mc">${I('x')}</button></div><p class="mu">We’ll send a 6-digit code. Email is the quickest.</p><input class="f" id="li" placeholder="Email or mobile number" autofocus><br><button class="btn y" data-a="otp">Send OTP</button>`);
+if(step==2)modal(`<h3>Enter OTP</h3><p class="mu">Sent to ${id}</p><input class="f" id="ot" inputmode="numeric" maxlength="6" placeholder="6-digit code"><button class="btn y" data-a="verify">Verify</button>`);
+if(step==3)modal(`<h3>Tell us about you</h3><p class="mu">Helps us show what you’ll like.</p><input class="f" id="nm" placeholder="Full name"><input class="f" id="db" type="date" aria-label="Date of birth"><div class="row" id="tt">${TASTE.map(t=>`<button class="chip" data-a="tt" data-v="${t}">${t}</button>`).join('')}</div><br><button class="btn y" data-a="prof">Continue</button>`)}
+function mOrder(o){modal(`<div style="text-align:center"><svg class="tick" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg><h3>Order placed</h3><p class="mu" style="margin:6px 0 16px">#${o.id} · ${o.mode=='pickup'?`Collect it from the store in about ${o.eta} minutes. Show code <b>${o.code}</b> at the counter.`:`Arriving in about ${o.eta} minutes.`}</p><button class="btn y" data-a="trk" data-v="${o.id}">Track order</button><button class="btn o" data-a="mc" style="margin-top:8px">Done</button></div>`)}
+const need=()=>{if(!S.user){mLogin(1);return 1}};
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t){if(e.target.closest('#lb'))$('#lb').className='';if(!e.target.closest('.sb'))$('#sg').style.display='none';return}
+const a=t.dataset.a,v=t.dataset.v,id=+t.dataset.id,i=+t.dataset.i;
+if(a=='wl'){e.stopPropagation();S.wish=S.wish.includes(id)?S.wish.filter(x=>x!=id):[...S.wish,id];T.pop=S.wish.includes(id)?id:null;render();T.pop=null;if(!$('#pdp').hidden)drawP();return}
+if(a=='open')openP(id);else if(a=='close')closePdp();else if(a=='home'){S.q='';$('#q').value='';go('home')}else if(a=='bag')go('bag');else if(a=='wish')go('wish');else if(a=='acct')go('acct')
+else if(a=='f'){S.f[t.dataset.k]=t.dataset.v;if(t.dataset.k=='g')S.f.c='';load()}else if(a=='fp')mFilter();else if(a=='reset'){modal();S.f={g:'',c:'',s:'',max:20000,z:'',b:[],sale:0};S.q='';$('#q').value='';load()}
+else if(a=='col'){T.col=v;if(qty(pf(T.pid),v,T.sz)<=0)T.sz='';const x=$('#pdp').scrollTop;drawP();$('#pdp').scrollTop=x}else if(a=='sz'){T.sz=v;const x=$('#pdp').scrollTop;drawP();$('#pdp').scrollTop=x}
+else if(a=='add'){if(inBag()){go('bag');return}if(addToBag()){render();bump();const x=$('#pdp').scrollTop;drawP();$('#pdp').scrollTop=x;toast('Added to bag')}}
+else if(a=='buy'){if(!inBag()&&!addToBag())return;go('bag')}
+else if(a=='ptab'){T.tab=v;const x=$('#pdp').scrollTop;drawP();$('#pdp').scrollTop=x}
+else if(a=='specall'){T.specAll=!T.specAll;const x=$('#pdp').scrollTop;drawP();$('#pdp').scrollTop=x}
+else if(a=='szchart')mSize();
+else if(a=='similar'){S.f={g:'',c:pf(T.pid).c,s:'',max:20000,z:'',b:[],sale:0};S.q='';$('#q').value='';closePdp();S.view='home';load();scrollTo(0,0)}
+else if(a=='fz'){S.f.z=S.f.z==v?'':v;document.querySelectorAll('.sheet .sz').forEach(x=>x.classList.toggle('on',x.dataset.v==S.f.z))}
+else if(a=='fapply'){modal();load()}
+else if(a=='trk'){modal();openTrk(v)}
+else if(a=='trkp'){const g=trkGroups().find(x=>x.idx>=0&&x.idx<5&&!x.rej);if(g)openTrk(g.id)}
+else if(a=='trkx')closeTrk();
+else if(a=='qp'){const b=S.bag[i];if(b.qty+1>qty(pf(b.id),b.col,b.size))return toast('No more stock in this size');b.qty++;render()}else if(a=='qm'){S.bag[i].qty>1?S.bag[i].qty--:S.bag.splice(i,1);render()}else if(a=='rm'){S.bag.splice(i,1);render()}
+else if(a=='use'||a=='apply'){const c=a=='use'?v:$('#cc').value.trim().toUpperCase(),x=CP.find(k=>k.code==c&&k.ok);if(!x)return toast('Invalid or unapproved code');if(totals().sub<x.min)return toast('Add more items to use '+c);S.coupon=c;render();toast(c+' applied')}
+else if(a=='area')mArea();else if(a=='mc'){modal();if(T.gpsBak!==undefined){S.gps=T.gpsBak;T.gpsBak=undefined}if(MAP){try{MAP.remove()}catch(e){}MAP=null;MK=null}}
+else if(a=='tag'){T.tag=v;document.querySelectorAll('#tg button').forEach(x=>x.classList.toggle('on',x.dataset.v==v))}
+else if(a=='sr'){const x=T.sr[i];$('#mr').innerHTML='';$('#ms').value='';setPin(+x.lat,+x.lon,1)}
+else if(a=='gps'){if(!navigator.geolocation)return toast('Location is not supported on this device');ld(t,1);navigator.geolocation.getCurrentPosition(p=>{ld(t,0);setPin(p.coords.latitude,p.coords.longitude,1)},()=>{ld(t,0);toast('Please allow location access, or search your address')},{enableHighAccuracy:true,timeout:12000})}
+else if(a=='saveaddr'){const g=k=>$('#'+k).value.trim(),flat=g('a1'),addr2=g('a2'),landmark=g('a5'),area=g('a3'),pin=g('a4'),city=g('a6')||'Hyderabad',state=g('a7')||'Telangana';
+if(!flat)return toast('Add your house or flat number');if(!addr2)return toast('Add your building and street');if(!landmark)return toast('Add a landmark so the rider can find you');if(!area)return toast('Add your area name');if(!okPin(pin))return toast('Enter a valid Hyderabad pincode (500…)');
+if(MAP&&!S.gps)return toast('Tap the map or use GPS to drop your pin');if(S.gps&&!inHyd(S.gps[0],S.gps[1]))return toast('We deliver only in Hyderabad right now');
+ld(t,1);setTimeout(()=>{ld(t,0);const ent={id:T.editId||('a'+Date.now()),flat,addr2,landmark,area,pin,city,state,tag:T.tag||'Home',gps:S.gps};S.addrs=[ent,...(S.addrs||[]).filter(x=>x.id!=ent.id)].slice(0,5);T.editId=null;T.gpsBak=undefined;S.ad=ent;S.area=area;S.pin=pin;S.addr=[flat,addr2,'Near '+landmark,area,city,state].filter(Boolean).join(', ')+' - '+pin;syncCust();track('address');modal();if(MAP){try{MAP.remove()}catch(e){}MAP=null;MK=null}render();toast('Address saved')},500)}
+else if(a=='goimg'){const c=$('#car');c.scrollTo({left:i*c.clientWidth,behavior:'smooth'})}else if(a=='zoom'){$('#lb').innerHTML='<img src="'+t.dataset.u+'" alt="">';$('#lb').className='on'}
+else if(a=='go'){go(v);if(v=='orders')loadOrders()}
+else if(a=='editprof')mProf();
+else if(a=='saveprof'){S.user.name=$('#pn1').value.trim()||S.user.name;S.user.dob=$('#pd1').value;S.user.taste=[...document.querySelectorAll('#tt .on')].map(x=>x.dataset.v);syncCust();modal();render();toast('Profile updated')}
+else if(a=='lgo')modal(`<h3>Log out?</h3><p class="mu" style="margin:6px 0 16px">You can log back in any time with an OTP.</p><div class="row" style="flex-wrap:nowrap"><button class="btn o" data-a="mc">Cancel</button><button class="btn y" data-a="logout">Log out</button></div>`)
+else if(a=='useaddr'){const x=(S.addrs||[]).find(y=>y.id==v);if(x){S.ad=x;S.area=x.area;S.pin=x.pin;S.gps=x.gps||null;S.addr=addrLine(x);syncCust();render();toast('Delivery address updated')}}
+else if(a=='editaddr')mArea((S.addrs||[]).find(y=>y.id==v));
+else if(a=='newaddr')mArea(null,true);
+else if(a=='deladdr'){S.addrs=(S.addrs||[]).filter(y=>y.id!=v);if(S.ad&&S.ad.id==v){S.ad=null;S.area=null;S.pin=null;S.gps=null;S.addr=''}render()}
+else if(a=='cpy'){try{navigator.clipboard.writeText(v)}catch(e){}toast('Copied '+v)}
+else if(a=='share'){const tx=`Shop festive fashion in 60 minutes in Hyderabad. Use my code ${rcode()} on Drape60.`;if(navigator.share)navigator.share({title:'Drape60',text:tx,url:location.href}).catch(()=>{});else{try{navigator.clipboard.writeText(tx)}catch(e){}toast('Invite message copied')}}
+else if(a=='mode'){S.mode=v;render()}
+else if(a=='fcat'){S.f={g:'',c:'',s:'',max:20000,z:'',b:[],sale:0};S.f[t.dataset.k]=v;S.q='';$('#q').value='';S.view='home';closePdp();load();scrollTo(0,0)}
+else if(a=='login')mLogin(1);else if(a=='otp'){const id=$('#li').value.trim();if(!/^\S+@\S+\.\S+$/.test(id)&&!/^[6-9]\d{9}$/.test(id))return toast('Enter a valid email or 10-digit mobile');if(API_URL){const em=id.includes('@');ld(t,1);api('otp',{role:'customer',email:em?id:'',phone:em?'':id}).then(r=>{ld(t,0);if(r.err)return toast(r.err);mLogin(2,id,null);toast('OTP sent to your email'+(r.sms?' and phone':''))});return}const o=String(Math.floor(100000+Math.random()*900000));mLogin(2,id,o);toast('Demo OTP: '+o+' (real email/SMS needs the backend)')}
+else if(a=='verify'){const fin=r=>{S.user=S.user&&S.user.id==T.m.id?S.user:{id:T.m.id,taste:[]};if(r){S.tok=r.token;const c=r.customer;if(c){S.user.name=S.user.name||c.name;S.user.dob=S.user.dob||c.dob;if(c.addr&&!S.addr)S.addr=c.addr;if(c.area&&!S.area)S.area=c.area}}save();track('login');startTrk();S.user.name?(modal(),render()):mLogin(3)};if(API_URL){ld(t,1);api('verify',{role:'customer',id:T.m.id,code:$('#ot').value}).then(r=>{ld(t,0);r.err?toast(r.err):fin(r)});return}if($('#ot').value!=T.m.otp)return toast('Incorrect OTP');fin()}
+else if(a=='tt')t.classList.toggle('on');else if(a=='prof'){const d=$('#db').value;S.user.name=$('#nm').value.trim()||'there';S.user.dob=d;S.user.taste=[...document.querySelectorAll('#tt .on')].map(x=>x.dataset.v);syncCust();modal();render()}
+else if(a=='taste'){const tt=S.user.taste||(S.user.taste=[]);S.user.taste=tt.includes(v)?tt.filter(x=>x!=v):[...tt,v];render()}
+else if(a=='logout'){modal();track('logout');S.user=null;S.tok=null;T.ord=null;S.bag=S.bag;go('home');toast('Logged out')}
+else if(a=='pay'){if(need())return;const pk=S.mode=='pickup';if(!pk&&(!S.addr||!S.pin||!S.gps)){toast('Add your delivery address first');mArea();return}
+const tt=totals(),eta=pk?15:Math.max(...S.bag.map(b=>est(pf(b.id)).bike));ld(t,1);
+/* Razorpay checkout goes here once keys are provided */
+setTimeout(()=>{const o={id:Math.floor(10000+Math.random()*89999),ts:Date.now(),t:tt.tot,n:S.bag.reduce((s,b)=>s+b.qty,0),at:new Date().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}),area:pk?'Store pickup':S.area,eta,mode:pk?'pickup':'delivery',code:Math.floor(1000+Math.random()*9000)};placeRows(o);S.orders.unshift(o);S.bag=[];S.coupon=null;render();mOrder(o);updPill();setTimeout(loadOrders,1800)},1200)}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id=='so'){S.sort=t.value;load()}else if(t.dataset&&t.dataset.b!==undefined){const b=t.dataset.b;S.f.b=(S.f.b||[]).filter(x=>x!=b);if(t.checked)S.f.b.push(b)}else if(t.id=='fsale')S.f.sale=t.checked});
+document.addEventListener('input',e=>{if(e.target.id=='mx'){S.f.max=+e.target.value;const l=$('#mxl');if(l)l.textContent=S.f.max>=20000?'Any price':'Up to '+fm(S.f.max)}});
+const qi=$('#q'),sg=$('#sg');
+qi.addEventListener('input',()=>{const s=suggest(qi.value);sg.innerHTML=s.map(x=>`<button data-s="${x}">${x}</button>`).join('');sg.style.display=s.length?'block':'none'});
+sg.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b){qi.value=b.dataset.s;doSearch()}});
+qi.addEventListener('keydown',e=>{if(e.key=='Enter')doSearch()});
+function doSearch(){S.q=qi.value.trim();sg.style.display='none';qi.blur();S.view='home';closePdp();load()}
+S.view='home';T.anim=1;render();T.anim=0;if(!S.area&&!S.seen){S.seen=1;mArea()}
+if(API_URL)api('boot').then(r=>{if(r.err){hideSplash();return toast('Showing offline catalogue')}
+if(r.products&&r.products.length)P=r.products.map(x=>{const sc=x.sec||({W:'Women',M:'Men'}[x.g])||'Unisex',cl=Object.keys(x.cols||{});return{id:x.id,n:esc(x.n),g:{Women:'W',Men:'M',Kids:'K'}[sc]||'U',sec:sc,c:esc(x.c),p:+x.p,d:esc(x.d),st:esc(x.store),brand:esc(x.brand||x.store),sizeNote:esc(x.sizeNote||''),spec:(Array.isArray(x.spec)?x.spec:[]).filter(r=>r&&r[0]&&r[1]).map(r=>[esc(r[0]),esc(r[1])]),cols:x.cols,col:cl,hex:x.hex||{},imgc:Array.isArray(x.imgc)?x.imgc:[],imgs:Array.isArray(x.imgs)&&x.imgs.length?x.imgs:null,off:x.off||null}}).filter(p=>p.col.length);
+HUB={};(r.stores||[]).forEach(s=>HUB[s.name]=s.area);
+if(r.coupons)CP=r.coupons.map(c=>({code:c.code,t:c.type,v:+c.value,cap:+c.cap||99999,min:+c.min||0,ok:1,d:c.desc||c.code}));
+if(r.offer)OFFER=r.offer;T.anim=1;render();T.anim=0;hideSplash()});
+if(S.tok)startTrk();
+const SPL0=Date.now();function hideSplash(){setTimeout(()=>{const x=$('#splash');if(x){x.style.opacity=0;setTimeout(()=>x.remove(),450)}},Math.max(0,1500-(Date.now()-SPL0)))}
+if(!API_URL)hideSplash();else setTimeout(hideSplash,9000);
+</script></body></html>
